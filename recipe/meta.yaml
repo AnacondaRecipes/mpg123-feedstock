@@ -33,6 +33,8 @@ about:
     license_family: LGPL
     license_file: COPYING
     summary: "mpg123 - fast console MPEG Audio Player and decoder library"
+    dev_url: https://github.com/dominictarr/mpg123
+    doc_url: https://www.mpg123.de/api/
 
 extra:
     recipe-maintainers:
