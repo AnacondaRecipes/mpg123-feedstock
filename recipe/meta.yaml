@@ -1,5 +1,5 @@
 {% set name = "mpg123" %}
-{% set version = "1.25.8" %}
+{% set version = "1.30.0" %}
 
 package:
   name: {{ name|lower }}
@@ -8,31 +8,33 @@ package:
 source:
   fn: {{ name }}-{{ version }}.tar.bz2
   url: https://sourceforge.net/projects/{{ name }}/files/{{ name }}/{{ version }}/{{ name }}-{{ version }}.tar.bz2/download
-  sha256: 79da51efae011814491f07c95cb5e46de0476aca7a0bf240ba61cfc27af8499b
+  sha256: 397ead52f0299475f2cefd38c3835977193fd9b1db6593680346c4e9109ed61c
 
 build:
     number: 1000
     skip: true  # [win]
+    error_overlinking: true
 
 requirements:
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
     - make
+    - libtool  # [unix]
   host:
 
 test:
   commands:
     - test -f $PREFIX/lib/libmpg123${SHLIB_EXT}  # [not win]
     - test -f $PREFIX/lib/libout123${SHLIB_EXT}  # [not win]
-    - conda inspect objects -p $PREFIX $PKG_NAME  # [osx]
-    - conda inspect linkages -p $PREFIX $PKG_NAME  # [linux]
 
 about:
     home: https://www.mpg123.de/
     license: LGPL-2.1
     license_family: LGPL
     license_file: COPYING
+    dev_url: https://www.mpg123.de/cgi-bin/scm/mpg123/
+    doc_url: https://www.mpg123.de/api/
     summary: "mpg123 - fast console MPEG Audio Player and decoder library"
 
 extra:
