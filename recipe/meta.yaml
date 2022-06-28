@@ -33,6 +33,8 @@ about:
     license: LGPL-2.1
     license_family: LGPL
     license_file: COPYING
+    dev_url: https://www.mpg123.de/cgi-bin/scm/mpg123/
+    doc_url: https://www.mpg123.de/api/
     summary: "mpg123 - fast console MPEG Audio Player and decoder library"
 
 extra:
