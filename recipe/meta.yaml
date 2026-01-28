@@ -1,41 +1,55 @@
 {% set name = "mpg123" %}
-{% set version = "1.30.0" %}
+{% set version = "1.33.4" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  fn: {{ name }}-{{ version }}.tar.bz2
-  url: https://sourceforge.net/projects/{{ name }}/files/{{ name }}/{{ version }}/{{ name }}-{{ version }}.tar.bz2/download
-  sha256: 397ead52f0299475f2cefd38c3835977193fd9b1db6593680346c4e9109ed61c
+  url: https://www.mpg123.de/download/{{ name }}-{{ version }}.tar.bz2
+  sha256: 3ae8c9ff80a97bfc0e22e89fbcd74687eca4fc1db315b12607f27f01cb5a47d9
 
 build:
-    number: 1000
-    skip: true  # [win]
-    error_overlinking: true
+  number: 0
+  run_exports:
+      # Seems to have good compatibility
+      # https://abi-laboratory.pro/index.php?view=timeline&l=mpg123
+      # But the minor releases are not too often, so I think it is probably
+      # best to play it safe
+    - {{ pin_subpackage("mpg123", max_pin="x.x") }}
 
 requirements:
   build:
+    - {{ stdlib("c") }}
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
-    - make
-    - libtool  # [unix]
+    - make        # [unix]
+    - cmake       # [win]
+    - ninja-base  # [win]
+    - yasm        # [win]
+    - libtool     # [unix]
+    - gnuconfig   # [unix]
+    - pkg-config  # [unix]
   host:
 
 test:
   commands:
     - test -f $PREFIX/lib/libmpg123${SHLIB_EXT}  # [not win]
     - test -f $PREFIX/lib/libout123${SHLIB_EXT}  # [not win]
+    - if not exist %PREFIX%\\Library\\bin\\mpg123.dll exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\mpg123.lib exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\bin\\out123.dll exit 1  # [win]
+    - if not exist %PREFIX%\\Library\\lib\\out123.lib exit 1  # [win]
 
 about:
-    home: https://www.mpg123.de/
+    home: https://www.mpg123.de
     license: LGPL-2.1
     license_family: LGPL
     license_file: COPYING
-    dev_url: https://www.mpg123.de/cgi-bin/scm/mpg123/
-    doc_url: https://www.mpg123.de/api/
     summary: "mpg123 - fast console MPEG Audio Player and decoder library"
+    description: "mpg123 - fast console MPEG Audio Player and decoder library"
+    dev_url: https://www.mpg123.de/cgi-bin/scm/mpg123
+    doc_url: https://www.mpg123.de/api
 
 extra:
     recipe-maintainers:
